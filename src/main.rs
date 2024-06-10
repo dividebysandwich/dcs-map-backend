@@ -18,6 +18,10 @@ fn handle_client(stream: TcpStream, app_state: Arc<AppState>) {
         match reader.read_line(&mut buffer) {
             Ok(_) => {
                 let received_state = buffer.trim_end().to_string();
+                if received_state.len() == 0 {
+                    keep_socket_open = false;
+                    continue;
+                }
                 match app_state.current_state.lock() {
                     Ok(mut current_state) => {
                         // update current_state
